@@ -47,7 +47,7 @@ const createUser = async (data, files) => {
     console.error(error)
     return { error: 'bad input' };
   }
-  return { person, user };
+  return { person, email: user.email };
 };
 
 module.exports = { createUser }
