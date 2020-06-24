@@ -12,7 +12,7 @@ const getUser = async data => {
     const userExist = await User.findOne({ where: { email }, raw: true, nest: true })
     if (!userExist) return 'user do not exist';
     user = await Person.findOne({ where: { id: userExist.id }, raw: true, nest: true })
-    hash = await bcrypt.compare(password, user.password);
+    hash = await bcrypt.compare(password, userExist.password);
     if (!hash) return 'error in user or password'
     token = await jwt.sign({
       data: {
