@@ -29,6 +29,10 @@ const Person = sequelize.define('people', {
     type: Sequelize.TEXT,
     allowNull: false,
   },
+  image: {
+    type: Sequelize.TEXT,
+    allowNull: true,
+  },
   active: {
     type: Sequelize.BOOLEAN,
     allowNull: false,
