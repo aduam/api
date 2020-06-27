@@ -7,7 +7,7 @@ const route = require('./router')
 const app = express();
 const PORT = process.env.PORT || 4000
 
-const whitelist = ['http://localhost:3000', 'http://localhost:3001', 'https://front-transport.vercel.app/']
+const whitelist = ['http://localhost:3000', 'http://localhost:3001', 'https://front-transport.vercel.app']
 var corsOptionsDelegate = function (req, callback) {
   var corsOptions;
   if (whitelist.indexOf(req.header('Origin')) !== -1) {
