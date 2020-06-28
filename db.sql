@@ -18,6 +18,21 @@ create table users(
   foreign key (id) references people(id)
 );
 
+create table tickets(
+  id serial primary key not null,
+  full_name varchar(256) not null,
+  address text not null,
+  phone varchar(40) not null,
+  total numeric(6, 2) not null,
+  change numeric(4, 2),
+  status varchar(20) not null,
+  created_at numeric(13) not null,
+  updated_at numeric(13) not null,
+  active boolean not null,
+  id_person int not null,
+  foreign key (id_person) references people(id)
+);
+
 create table posts(
   id serial primary key not null,
   id_user int not null,
