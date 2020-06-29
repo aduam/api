@@ -4,6 +4,7 @@ create table people(
   id serial primary key not null,
   names varchar(100) not null,
   surnames varchar(100) not null,
+  corporation varchar(100),
   email varchar(100) not null,
   phone varchar(25) not null,
   address varchar(250) not null,

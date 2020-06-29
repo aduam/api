@@ -67,10 +67,10 @@ const remove = async (id) => {
   return ticket;
 }
 
-const get = async (id, user, { offset, limit }) => {
+const get = async (id, user, { offset = 0, limit = 35 }) => {
   let tickets = [];
   try {
-    const { count, rows } = await Ticket.findAndCountAll({ where: { id_person: user.id }, offset: offset || 0, limit: limit || 10, raw: true, nest: true });
+    const { count, rows } = await Ticket.findAndCountAll({ where: { id_person: user.id, active: true }, offset, limit, raw: true, nest: true });
     tickets = {
       pages: Math.round(count/limit),
       offset,
