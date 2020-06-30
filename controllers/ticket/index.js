@@ -1,9 +1,44 @@
 const response = require('../../utils/response');
-const { create, update, remove, get } = require('./store');
+const {
+  create,
+  update,
+  remove,
+  getPending,
+  getInProgress,
+  getDelivered,
+  getLiquidated,
+} = require('./store');
 
-const getTickets = async (req, res) => {
-  const { userContent, params: { id }, query } = req;
-  const getTicket = await get(id, userContent, query);
+const getTicketsPending = async (req, res) => {
+  const { userContent, query } = req;
+  const getTicket = await getPending(userContent, query);
+  if (!getTicket.error) {
+    response(res, 200, 'success', getTicket);
+  }
+  response(res, 400, 'error', getTicket);
+};
+
+const getTicketsInProgress = async (req, res) => {
+  const { userContent, query } = req;
+  const getTicket = await getInProgress(userContent, query);
+  if (!getTicket.error) {
+    response(res, 200, 'success', getTicket);
+  }
+  response(res, 400, 'error', getTicket);
+};
+
+const getTicketsDelivered = async (req, res) => {
+  const { userContent, query } = req;
+  const getTicket = await getDelivered(userContent, query);
+  if (!getTicket.error) {
+    response(res, 200, 'success', getTicket);
+  }
+  response(res, 400, 'error', getTicket);
+};
+
+const getTicketsLiquidated = async (req, res) => {
+  const { userContent, query } = req;
+  const getTicket = await getLiquidated(userContent, query);
   if (!getTicket.error) {
     response(res, 200, 'success', getTicket);
   }
@@ -38,7 +73,10 @@ const createTicket = async (req, res) => {
 };
 
 module.exports = {
-  getTickets,
+  getTicketsPending,
+  getTicketsInProgress,
+  getTicketsDelivered,
+  getTicketsLiquidated,
   putTicket,
   createTicket,
   removeTicket,

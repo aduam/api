@@ -42,7 +42,7 @@ const update = async ({ id, status }) => {
     };
     const searchTicket = await Ticket.findOne({ where: { id }, raw: true, nest: true });
     if (!searchTicket) return { error: 'No. de boleta no existe' };
-    if (searchTicket.status === 'CANCELLED') return { error: 'Esta boleta no se puede actualizar ya fue cancelada' };
+    if (searchTicket.status === 'CANCELLED' || searchTicket.status === 'LIQUIDATED') return { error: 'Esta boleta no se puede actualizar ya fue cancelada o liquidada!' };
     await Ticket.update({ ...obj }, { where: { id } });
     ticket = await Ticket.findOne({ where: { id }, raw: true, nest: true });
   } catch (error) {
@@ -67,10 +67,10 @@ const remove = async (id) => {
   return ticket;
 }
 
-const get = async (id, user, { offset = 0, limit = 35 }) => {
+const getPending = async (user, { offset = 0, limit = 35 }) => {
   let tickets = [];
   try {
-    const { count, rows } = await Ticket.findAndCountAll({ where: { id_person: user.id, active: true }, offset, limit, raw: true, nest: true });
+    const { count, rows } = await Ticket.findAndCountAll({ where: { id_person: user.id, active: true, status: 'PENDING' }, offset, limit, raw: true, nest: true });
     tickets = {
       pages: Math.round(count/limit),
       offset,
@@ -84,4 +84,55 @@ const get = async (id, user, { offset = 0, limit = 35 }) => {
   return tickets;
 };
 
-module.exports = { create, update, remove, get };
+const getInProgress = async (user, { offset = 0, limit = 35 }) => {
+  let tickets = [];
+  try {
+    const { count, rows } = await Ticket.findAndCountAll({ where: { id_person: user.id, active: true, status: 'INPROGRESS' }, offset, limit, raw: true, nest: true });
+    tickets = {
+      pages: Math.round(count/limit),
+      offset,
+      limit,
+      rows
+    };
+  } catch (error) {
+    console.error(error.message);
+    return { error: error.message }
+  }
+  return tickets;
+};
+
+const getDelivered = async (user, { offset = 0, limit = 35 }) => {
+  let tickets = [];
+  try {
+    const { count, rows } = await Ticket.findAndCountAll({ where: { id_person: user.id, active: true, status: 'DELIVERED' }, offset, limit, raw: true, nest: true });
+    tickets = {
+      pages: Math.round(count/limit),
+      offset,
+      limit,
+      rows
+    };
+  } catch (error) {
+    console.error(error.message);
+    return { error: error.message }
+  }
+  return tickets;
+};
+
+const getLiquidated = async (user, { offset = 0, limit = 35 }) => {
+  let tickets = [];
+  try {
+    const { count, rows } = await Ticket.findAndCountAll({ where: { id_person: user.id, active: true, status: 'LIQUIDATED' }, offset, limit, raw: true, nest: true });
+    tickets = {
+      pages: Math.round(count/limit),
+      offset,
+      limit,
+      rows
+    };
+  } catch (error) {
+    console.error(error.message);
+    return { error: error.message }
+  }
+  return tickets;
+};
+
+module.exports = { create, update, remove, getPending, getInProgress, getDelivered, getLiquidated };
